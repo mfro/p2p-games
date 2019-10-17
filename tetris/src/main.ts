@@ -18,7 +18,7 @@ const config = {
     rtc_host: 'wss://api.mfro.me/p2p',
     size: new Vec(10, 20),
     scale: 24,
-    DAS: 100,
+    DAS: 180,
     ARR: 28,
 };
 
@@ -274,7 +274,7 @@ abstract class Game {
 
         this.render_preview(this.hold, new Vec(0, 0));
 
-        for (let i = 0; i < this.queue.length; ++i) {
+        for (let i = 0; i < 5; ++i) {
             this.render_preview(this.queue[i], new Vec((this.size.x + 4) * config.scale, i * 4 * config.scale));
         }
 
@@ -336,11 +336,6 @@ class LocalGame extends Game {
         readonly rand: alea,
     ) {
         super(canvas, size);
-
-        for (let i = 0; i < 5; ++i) {
-            let index = this.rand.uint32() % tetronimos.length;
-            this.queue.push(tetronimos[index]);
-        }
 
         this.hold_used = false;
         this.fall_tick = 0;
@@ -434,9 +429,15 @@ class LocalGame extends Game {
         if (force) {
             falling = force;
         } else {
+            while (this.queue.length < 6) {
+                let bag = tetronimos.slice();
+                while (bag.length > 0) {
+                    let index = this.rand.uint32() % bag.length;
+                    this.queue.push(...bag.splice(index, 1));
+                }
+            }
+
             falling = this.queue.shift()!;
-            let index = this.rand.uint32() % tetronimos.length;
-            this.queue.push(tetronimos[index]);
 
             if (this.garbage > 0) {
                 for (let y = 0; y < this.size.y - this.garbage; ++y) {
