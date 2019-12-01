@@ -1,27 +1,15 @@
 <template>
-  <v-app dark class="app">
-    <v-container fluid class="d-flex flex-column align-center">
-      <div class="d-flex flex-column">
-        <div class="d-flex mb-3">
-          <div class="score d-flex justify-center" v-for="(snake, i) in state.snakes" :key="i">
-            <span>{{ snake.body.length }}</span>
-          </div>
-        </div>
-
-        <canvas class="white" ref="canvas" />
-
-        <div v-if="state.role == 'accept'">
-          <v-text-field
-            ref="localName"
-            readonly
-            :value="url"
-            prepend-icon="mdi-content-copy"
-            @click:prepend="copy()"
-          />
+  <div class="root">
+    <div>
+      <div>
+        <div class="score" v-if="state.snake">
+          <span>{{ state.snake.body.length }}</span>
         </div>
       </div>
-    </v-container>
-  </v-app>
+
+      <canvas class="white" ref="canvas" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -52,29 +40,40 @@ export default {
 </script>
 
 <style lang="scss">
-.v-text-field input {
-  font-family: monospace;
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #e0e0e0 !important;
 }
 </style>
 
 <style scoped lang="scss">
-.app {
-  background-color: #e0e0e0 !important;
+.root {
+  display: flex;
+  justify-content: center;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .score {
   flex: 1 1 0;
+  margin: 10px 0;
   background: white;
-  margin-left: 12px;
-
-  &:first-child {
-    margin-left: 0;
-  }
+  text-align: center;
 
   > span {
     font-size: 18pt;
     font-weight: 700;
     font-family: Roboto;
   }
+}
+
+canvas {
+  background: white;
 }
 </style>
